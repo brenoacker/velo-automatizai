@@ -13,6 +13,7 @@ test('Search for an existing order', async ({ page }) => {
   await page.getByRole('link', { name: 'Consultar Pedido' }).click();
 
   // Act
+  await expect(page.getByRole('textbox', { name: 'Número do Pedido' })).toBeVisible();
   await page.getByRole('textbox', { name: 'Número do Pedido' }).click()
   await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(existingOrderId);
   await expect(page.getByRole('button', {name: 'Buscar Pedido'})).toBeVisible()
@@ -36,6 +37,7 @@ test('Search for a non-existing order', async ({ page }) => {
   await expect(page.getByRole('textbox', { name: 'Número do Pedido' })).toBeVisible();
   await page.getByRole('textbox', { name: 'Número do Pedido' }).click();
   await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(nonExistingOrderId);
+  await expect(page.getByRole('button', {name: 'Buscar Pedido'})).toBeVisible()
   await page.getByRole('button', {name: 'Buscar Pedido'}).click();
   
   // Assert
