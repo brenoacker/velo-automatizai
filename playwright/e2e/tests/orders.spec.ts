@@ -20,8 +20,12 @@ test('Search for an existing order', async ({ page }) => {
   await page.getByRole('button', {name: 'Buscar Pedido'}).click();
   
   // Assert
-  await expect(page.getByText('Pedido', { exact: true })).toBeVisible({timeout: 10_000});
-  await expect(page.getByText(existingOrderId)).toBeVisible();
+  const orderContainer = page.getByRole('paragraph')
+    .filter({ hasText: /^Pedido$/ })
+    .locator('..');
+    
+  await expect(orderContainer).toBeVisible({timeout: 10_000});
+  await expect(orderContainer).toContainText(existingOrderId)
   await expect(page.getByText('APROVADO')).toBeVisible();
 });
 
