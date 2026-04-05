@@ -1,24 +1,14 @@
-import { test, expect } from '@playwright/test';
-import { generateRandomOrderId } from '../../support/helpers';
-import { OrderDetails, OrderLookupPage } from '../../support/pages/OrderLookupPage';
-
+import { test, expect } from '../../support/fixtures'
+import { generateRandomOrderId } from '../../support/helpers'
+import type { OrderDetails } from '../../support/actions/orderLookupActions'
 
 
 test.describe('Order Lookup', () => {
-
-  let orderLookupPage: OrderLookupPage;
-
-
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Velô Sprint', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Consultar Pedido' })).toBeVisible();
-    await page.getByRole('link', { name: 'Consultar Pedido' }).click();
-    await expect(page.getByRole('textbox', { name: 'Número do Pedido' })).toBeVisible();
-    orderLookupPage = new OrderLookupPage(page);
+  test.beforeEach(async ({ app }) => {
+    await app.orderLookup.open()
   })
 
-  test('displays approved order details with green badge', async ({ page }) => {
+  test('displays approved order details with green badge', async ({ app }) => {
     // Arrange
     const order: OrderDetails = {
         number: 'VLO-6AWB2D',
@@ -34,28 +24,24 @@ test.describe('Order Lookup', () => {
     }
 
     // Act
-    await orderLookupPage.searchOrder(order.number)
+    await app.orderLookup.searchOrder(order.number)
 
     // Assert
-    await orderLookupPage.expectOrderAriaSnapshot(order);
+    await app.orderLookup.expectOrderAriaSnapshot(order)
+    const statusBadge = await app.orderLookup.validateStatusBadge(order.status)
+    await app.orderLookup.validateStatusIcon(statusBadge, order.status)
+  })
 
-      const statusBadge = await orderLookupPage.validateStatusBadge(order.status)
-      await orderLookupPage.validateStatusIcon(statusBadge, order.status)
-
-  });
-
-  test('displays not found message for non-existing order', async ({ page }) => {
+  test('displays not found message for non-existing order', async ({ app }) => {
     // Arrange
-    const nonExistingOrderId = generateRandomOrderId();
-
+    const nonExistingOrderId = generateRandomOrderId()
     // Act
-    await orderLookupPage.searchOrder(nonExistingOrderId)
-    
+    await app.orderLookup.searchOrder(nonExistingOrderId)
     // Assert
-    await orderLookupPage.expectOrderAriaSnapshotForOrderNotFound();
-  });
+    await app.orderLookup.expectOrderAriaSnapshotForOrderNotFound()
+  })
 
-  test('displays order in analysis with yellow badge and clock icon', async ({ page }) => {
+  test('displays order in analysis with yellow badge and clock icon', async ({ app }) => {
     // Arrange
     const order: OrderDetails = {
       number: 'VLO-2S9U6E',
@@ -71,16 +57,15 @@ test.describe('Order Lookup', () => {
     }
 
     // Act
-    await orderLookupPage.searchOrder(order.number)
+    await app.orderLookup.searchOrder(order.number)
 
     // Assert
-    await orderLookupPage.expectOrderAriaSnapshot(order);
-
-    const statusBadge = await orderLookupPage.validateStatusBadge(order.status)
-    await orderLookupPage.validateStatusIcon(statusBadge, order.status)
+    await app.orderLookup.expectOrderAriaSnapshot(order)
+    const statusBadge = await app.orderLookup.validateStatusBadge(order.status)
+    await app.orderLookup.validateStatusIcon(statusBadge, order.status)
   })
 
-  test('displays rejected order with red badge', async ({ page }) => {
+  test('displays rejected order with red badge', async ({ app }) => {
     // Arrange
     const order: OrderDetails = {
       number: 'VLO-G01ABZ',
@@ -96,12 +81,10 @@ test.describe('Order Lookup', () => {
     }
 
     // Act
-    await orderLookupPage.searchOrder(order.number)
-
+    await app.orderLookup.searchOrder(order.number)
     // Assert
-    await orderLookupPage.expectOrderAriaSnapshot(order);
-
-    const statusBadge = await orderLookupPage.validateStatusBadge(order.status)
-    await orderLookupPage.validateStatusIcon(statusBadge, order.status)
+    await app.orderLookup.expectOrderAriaSnapshot(order)
+    const statusBadge = await app.orderLookup.validateStatusBadge(order.status)
+    await app.orderLookup.validateStatusIcon(statusBadge, order.status)
   })
-});
+})
