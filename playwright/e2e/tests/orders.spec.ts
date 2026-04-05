@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { generateRandomOrderId } from '../../support/helpers';
-import { OrderLookupPage } from '../../support/pages/OrderLookupPage';
+import { OrderDetails, OrderLookupPage } from '../../support/pages/OrderLookupPage';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 
 test('displays approved order details with green badge', async ({ page }) => {
   // Arrange
-  const order = {
+  const order: OrderDetails = {
       number: 'VLO-6AWB2D',
       status: 'APROVADO',
       color: 'Lunar White',
@@ -53,7 +53,7 @@ test('displays not found message for non-existing order', async ({ page }) => {
 
 test('displays order in analysis with yellow badge and clock icon', async ({ page }) => {
   // Arrange
-  const order = {
+  const order: OrderDetails = {
     number: 'VLO-2S9U6E',
     status: 'EM_ANALISE',
     color: 'Midnight Black',
@@ -79,7 +79,7 @@ test('displays order in analysis with yellow badge and clock icon', async ({ pag
 
 test('displays rejected order with red badge', async ({ page }) => {
   // Arrange
-  const order = {
+  const order: OrderDetails = {
     number: 'VLO-G01ABZ',
     status: 'REPROVADO',
     color: 'Glacier Blue',

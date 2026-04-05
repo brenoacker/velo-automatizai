@@ -1,5 +1,15 @@
 import { expect, Page } from "@playwright/test";
 
+export type OrderDetails = {
+    number: string;
+    status: string;
+    color: string;
+    wheels: string;
+    interior: string;
+    customer: { name: string; email: string };
+    payment: string;
+}
+
 export class OrderLookupPage {
     constructor(private page: Page) {}
 
@@ -11,14 +21,7 @@ export class OrderLookupPage {
         `);
     }
 
-    async expectOrderAriaSnapshot(order: {
-            number: string;
-            color: string;
-            wheels: string;
-            interior: string;
-            customer: { name: string; email: string };
-            payment: string;
-        }) {
+    async expectOrderAriaSnapshot(order: OrderDetails) {
             const snapshot = `
         - img "Velô Sprint"
         - paragraph: Modelo
