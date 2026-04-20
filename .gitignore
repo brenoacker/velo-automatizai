@@ -33,3 +33,4 @@ dist-ssr
 # Supabase
 /docs
 /supabase/.temp
+.playwright-mcp/
