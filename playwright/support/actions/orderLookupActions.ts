@@ -17,7 +17,16 @@ export function createOrderLookupActions(page: Page) {
     REPROVADO: { badgeClass: /bg-red-100/, textClass: /text-red-700/, iconClass: /lucide-circle-x/ },
   };
 
+  const orderInput = page.getByRole('textbox', { name: 'Número do Pedido' });
+  const searchButton = page.getByRole('button', { name: 'Buscar Pedido' });
+
   return {
+
+    elements: {
+        orderInput,
+        searchButton,
+    },
+
     async open() {
         await page.goto('/');
         await expect(page.getByRole('heading', { name: 'Velô Sprint', exact: true })).toBeVisible();
@@ -28,10 +37,10 @@ export function createOrderLookupActions(page: Page) {
     },
 
     async searchOrder(orderNumber: string) {
-      await page.getByRole('textbox', { name: 'Número do Pedido' }).click();
-      await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(orderNumber);
-      await expect(page.getByRole('button', { name: 'Buscar Pedido' })).toBeVisible();
-      await page.getByRole('button', { name: 'Buscar Pedido' }).click();
+      await orderInput.click();
+      await orderInput.fill(orderNumber);
+      await expect(searchButton).toBeVisible();
+      await searchButton.click();
     },
 
     async expectOrderAriaSnapshotForOrderNotFound() {

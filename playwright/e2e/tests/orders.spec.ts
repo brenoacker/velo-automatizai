@@ -87,4 +87,10 @@ test.describe('Order Lookup', () => {
     const statusBadge = await app.orderLookup.validateStatusBadge(order.status)
     await app.orderLookup.validateStatusIcon(statusBadge, order.status)
   })
+
+  test('find order button is disabled with empty field or with spaces', async ({ app }) => {
+    await expect(app.orderLookup.elements.searchButton).toBeDisabled()
+    await app.orderLookup.elements.orderInput.fill('   ')
+    await expect(app.orderLookup.elements.searchButton).toBeDisabled()
+  });
 })
